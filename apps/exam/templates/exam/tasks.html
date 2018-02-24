@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>tasks</title>
+	{% load static %}
+<!-- 	update ourApp below -->
+	<link rel="stylesheet" type="text/css" href="{% static 'exam/css/main.css' %}" media="screen" title="no title" charset="utf-8">
+</head>
+<body>
+	<div id="wrapper">
+		
+		<h1>hello {{request.session.name}} ~ today is {{request.session.now}}</h1>
+		<h1>today's appointments</h1>
+		<table>
+			{% if today %}
+			<tr>
+				<th>task</th>
+				<th>time</th>
+				<th>status</th>
+				<th>actions</th>
+			</tr>
+			{% endif %}
+			{% for task in today %}
+			<tr>
+				<th>{{task.name}}</th>
+				<th>{{task.time}}</th>
+				<th>{{task.status}}</th>
+				<th>{% if task.status != 'done' %}
+				<form action='toggle/' method='POST' id='edittoggle'>{% csrf_token %}<input type="hidden" name="id" value="{{task.id}}"><input type="submit" value="edit"> </form>
+				<form action='delete/' method='POST' id='delete'>{% csrf_token %}<input type="hidden" name="id" value="{{task.id}}"><input type="submit" value="delete"> </form>{% endif %}</th>				
+			</tr>
+							{% endfor %}
+		</table>		
+		{% if request.session.edit == True  %}
+	
+		<th><div id=make><h1>edit appointment - {{request.session.editname}}</h1>
+		<form action='edit/' method='POST' id='edit'>{% csrf_token %}
+		<p><label for='name'>task name</label><input type='text' name='name'></p>
+		<p><label for='status'>status</label><select name='status' form='edit'>
+			<option value='done'>done</option>
+			<option value='pending'>pending</option>
+			<option value='missed'>missed</option></select></p>			
+		<p><label for='date'>date</label><input type='date' value='2000-01-01' name='date'></p>
+		<p><label for='time'>time</label><input type='time' value='00:00' name='time'></p>
+
+		<p><input class='submit' type='submit' value='update'></p>
+		<p>
+		</form>
+		<form action='toggle/' method='POST' id='edittoggle'>{% csrf_token %}<input type="hidden" name="id" value="1"><input type="submit" value="close"> </form></div id=make></th>
+
+		{% endif %}
+		<h1>other appointments</h1>
+		<table>
+			<tr>
+				<th>task</th>
+				<th>date</th>
+				<th>time</th>
+			</tr>
+			{% for task in nottoday %}
+			<tr>
+				<th>{{task.name}}</th>
+				<th>{{task.date}}</th>
+				<th>{{task.time}}</th>			
+			</tr>
+			{% endfor %}
+		</table>	
+
+
+		<div id=make><h1>make appointment</h1>
+		{% if messages %}
+		<ul class="messages">
+    		{% for message in messages %}
+    		<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    		{% endfor %}
+		</ul>
+		{% endif %}	
+		<form action='process/' method='POST' id='taskaddform'>{% csrf_token %}
+			<p><label for='date'>date</label><input type='date' value='2000-01-01' name='date'></p>
+			<p><label for='time'>time</label><input type='time' value='00:00' name='time'></p>
+			<p><label for='name'>task</label><input type='text' name='name'></p>
+			<p><input class='submit' type='submit' value='~ ~ ~'></p>
+		</form></div id=make>
+		<br>
+		<a href="/exam/logout/">logout</a>		
+	</div>
+</body>
+</html>
+

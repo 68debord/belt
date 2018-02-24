@@ -30,9 +30,18 @@ a{
 	margin: auto;
 }
 
+#make{
+	border: 1px solid black;
+	width: 300px
+}
 
+table tr th{
+	border: 1px solid black;
+}
 
 form  { display: table;  }
 form p{ display: table-row;  }
+
 label { display: table-cell; text-align: right; }
 input { display: table-cell;}
+
