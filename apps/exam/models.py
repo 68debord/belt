@@ -46,14 +46,14 @@ class BlogManager(models.Manager):
 
             return errors
 
-    def task_validator(self, postData):
-        errors = {}
-        if len(postData['name']) == 0:
-            errors["name"] = "you must give your appointment a name"
-        if postData['date'] < nowc:
-            errors["date"] = "you can't have an appointment in the past"
+    # def task_validator(self, postData):
+    #     errors = {}
+    #     if len(postData['name']) == 0:
+    #         errors["name"] = "you must give your appointment a name"
+    #     if postData['date'] < nowc:
+    #         errors["date"] = "you can't have an appointment in the past"
 
-        return errors
+    #     return errors
 
 
 class User(models.Model):

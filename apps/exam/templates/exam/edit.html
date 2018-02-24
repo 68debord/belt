@@ -10,29 +10,7 @@
 <body>
 	<div id="wrapper">
 
-		{% if messages %}
-		<ul class="messages">
-    		{% for message in messages %}
-    		<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    		{% endfor %}
-		</ul>
-		{% endif %}
-
-		<h1>~ register ~</h1>
-		<form action='/exam/register/' method='POST'>{% csrf_token %}
-			<p><label for='name'>first name</label><input type='text' name='name' id='name'></p>
-			<p><label for='email'>email</label><input type='text' name='email' id='email'></p>
-			<p><label for='password'>password</label><input type='password' name='password' id='password'></p>
-			<p><label for='confirm_password'>confirm password</label><input type='password' name='confirm_password' id='confirm_password'></p>
-			<p><label for='date_of_birth'>date of birth</label><input type="date" name="date_of_birth" id="date_of_birth"></p>
-			<input class='submit' type='submit' value='~ ~ ~'>
-		</form>
-
-		<h1>~ login ~</h1>
-		<form action='/exam/login/' method='POST'>{% csrf_token %}
-			<p><label for='email'>email</label><input type='text' name='email' id='email'></p>
-			<p><label for='password'>password</label><input type='password' name='password' id='password'></p>
-			<input class='submit' type='submit' value='~ ~ ~'>
+		
 		</form>		
 	</div>
 </body>
