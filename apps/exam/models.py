@@ -17,10 +17,12 @@ class BlogManager(models.Manager):
         errors = {}
         if len(postData['name']) < 3:
             errors["name"] = "name should be more than 2 characters"
-
+        if len(postData['alias']) < 3:
+            errors["alias"] = "alias should be more than 2 characters"
         if not NAME_REGEX.match(postData['name']):
         	errors["name"] = "name should be only letters"
-
+        if not NAME_REGEX.match(postData['alias']):
+            errors["alias"] = "alias should be only letters" 
         if not EMAIL_REGEX.match(postData['email']):
         	errors["email"] = "must enter valid email"  
         test = User.objects.filter(email=postData['email'])   
@@ -30,6 +32,9 @@ class BlogManager(models.Manager):
             errors["password"] = "password must be at least 8 characters"
         if postData['password'] != postData['confirm_password']:
             errors["password"] = "passwords must match"
+        if postData['date_of_birth'] > nowc:
+            errors["date_of_birth"] = "you can't be born in the future"
+        
         return errors
 
     def login_validator(self, postData):
@@ -46,28 +51,30 @@ class BlogManager(models.Manager):
 
             return errors
 
-    # def task_validator(self, postData):
-    #     errors = {}
-    #     if len(postData['name']) == 0:
-    #         errors["name"] = "you must give your appointment a name"
-    #     if postData['date'] < nowc:
-    #         errors["date"] = "you can't have an appointment in the past"
+    def quote_validator(self, postData):
+    	errors = {}
+    	if len(postData['quoted_by']) < 4:
+    		errors["quoted_by"] = "quoted by must be more than 3 characters"
+    	if len(postData['quote']) < 11:
+    		errors["quote"] = "quote must be more than 10 characters"
+    	return errors
 
-    #     return errors
+
+
 
 
 class User(models.Model):
 	name = models.CharField(max_length=255)
+	alias = models.CharField(max_length=255)
 	email = models.CharField(max_length=255)
 	password = models.CharField(max_length=255)
 	date_of_birth = models.DateTimeField()
 	created_at = models.DateTimeField(auto_now_add = True)
 	objects = BlogManager()
 
-class Task(models.Model):
-	name = models.CharField(max_length=255)
-	status = models.CharField(max_length=255)
-	date = models.DateField()
-	time = models.TimeField()
-	creator = models.ForeignKey(User, related_name="tasks")
-
+class Quote(models.Model):
+    quote = models.CharField(max_length=255)
+    quoted_by = models.CharField(max_length=255)
+    uploaded_by = models.ForeignKey(User, related_name="uploaded_quotes")
+    fav_users = models.ManyToManyField(User, related_name = "fave_quotes")
+    created_at = models.DateTimeField(auto_now_add = True)

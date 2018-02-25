@@ -20,11 +20,12 @@
 
 		<h1>~ register ~</h1>
 		<form action='/exam/register/' method='POST'>{% csrf_token %}
-			<p><label for='name'>first name</label><input type='text' name='name' id='name'></p>
+			<p><label for='name'>name</label><input type='text' name='name' id='name'></p>
+			<p><label for='alias'>alias</label><input type='text' name='alias' id='alias'></p>			
 			<p><label for='email'>email</label><input type='text' name='email' id='email'></p>
 			<p><label for='password'>password</label><input type='password' name='password' id='password'></p>
 			<p><label for='confirm_password'>confirm password</label><input type='password' name='confirm_password' id='confirm_password'></p>
-			<p><label for='date_of_birth'>date of birth</label><input type="date" name="date_of_birth" value='2000-01-01' id="date_of_birth"></p>
+			<p><label for='date_of_birth'>date of birth</label><input type="date" name="date_of_birth" value='2018-01-01' id="date_of_birth"></p>
 			<input class='submit' type='submit' value='~ ~ ~'>
 		</form>
 

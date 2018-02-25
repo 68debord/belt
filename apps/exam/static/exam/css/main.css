@@ -17,7 +17,7 @@ body{
 
 
 a{
-	color: rgb(99,178,118);
+	color: rgb(240,170,137);
 }
 
 
@@ -25,14 +25,41 @@ a{
 	width: 1000px;
 	/*padding: 10px;*/
 	height: auto;
-	background-color: pink;
+	background-color: rgb(137,207,240);
 	padding:50px
 	margin: auto;
 }
 
-#make{
+#top{
+	width:auto;
+	height: 50px;
+	text-align: right;
+}
+
+#top h3{
+	display: inline-block;
+	text-align: left;
+}
+
+#right{
+	width: 400px;
+	display:inline-block;
+	vertical-align: top;
+	margin-bottom: 100px;
+}
+
+#left{
+	width: 400px;
+	display: inline-block;
+	vertical-align: top;
+	margin-bottom: 100px;
+}
+
+#box{
+	width:200px;
+	height: 75px;
+	overflow: auto;
 	border: 1px solid black;
-	width: 300px
 }
 
 table tr th{

@@ -9,8 +9,15 @@
 </head>
 <body>
 	<div id="wrapper">
-
-		
+		<div id="top">
+			<a href="/exam/home/">home</a>
+			<a href="/exam/logout/">logout</a>
+		</div>
+		<h2>uploaded by {{user.alias}}</h2>
+		<h2>quotes: {{count}}</h2>
+		{% for quote in quotes %}
+		<p><h4 style="color: rgb(240,170,137); display:inline-block">{{quote.quoted_by}}</h4>: {{quote.quote}}<p>
+		{% endfor %}
 		</form>		
 	</div>
 </body>

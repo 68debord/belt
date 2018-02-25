@@ -1,14 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 import bcrypt
-from datetime import datetime
-
-from django.utils.dateformat import DateFormat 
-from django.utils.formats import get_format
 
 
-
-# Create your views here.
 from models import *
 
 def index(request):
@@ -16,33 +10,52 @@ def index(request):
 	return render(request, 'exam/index.html')
 
 def home(request):
+	quotes = Quote.objects.exclude(fav_users = request.session['id']).order_by('-created_at')
+	favorites = Quote.objects.filter(fav_users = request.session['id'])
 
+	return render(request, 'exam/home.html', {"quotes": quotes, "favorites": favorites})
 
-	return render(request, 'exam/home.html')
+def user(request, id):
+	user = User.objects.get(id=id)
+	quotes = Quote.objects.filter(uploaded_by = id)
+	count = len(quotes)
+
+	return render(request, 'exam/user.html', {"user": user, "quotes": quotes, "count": count})
 
 def process(request):
 	if request.method == "POST":
-
-		else:		
-
-		return redirect ('/exam/tasks/')
+		errors = User.objects.quote_validator(request.POST)
+		print errors
+		if len(errors):
+			for tag, error in errors.iteritems():
+				messages.error(request, error, extra_tags=tag)
+			return redirect('/exam/home/')
+		else:			
+			uploaded_by = User.objects.get(id=request.session['id'])
+			Quote.objects.create(uploaded_by=uploaded_by, quote=request.POST['quote'], quoted_by=request.POST['quoted_by'])
+			return redirect ('/exam/home/')
 	else: 
-		return redirect('/exam/tasks/')
+		return redirect('/exam/home/')
 
-def edit(request):
-	if request.method == "POST":
+def favorite(request, id):
 
-		return redirect ('/exam/tasks/')
-	else: 
-		return redirect('/exam/tasks/')
+		user = User.objects.get(id=request.session['id'])
+		print user
+		quote = Quote.objects.get(id=id)
+		print quote
+		quote.fav_users.add(user)
 
-def delete(request):
-	if request.method == "POST":
-		# task = Task.objects.get(id=request.POST['id'])
-		# task.delete()
-		return redirect('/exam/tasks')
-	else:
-		return redirect('/exam/tasks')	
+		return redirect ('/exam/home/')
+
+
+def delete(request, id):
+
+		quote = Quote.objects.get(id=id)
+		user = User.objects.get(id=request.session['id'])
+		quote.fav_users.remove(user)
+
+		return redirect('/exam/home')
+
 
 
 
@@ -57,11 +70,11 @@ def register(request):
 		else:
 
 			hashed = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt())
-			new_user=User.objects.create(name=request.POST['name'], email=request.POST['email'], password = hashed, date_of_birth=request.POST['date_of_birth'])
+			new_user=User.objects.create(name=request.POST['name'], alias=request.POST['alias'], email=request.POST['email'], password = hashed, date_of_birth=request.POST['date_of_birth'])
 			request.session['id'] = new_user.id
-			request.session['name'] = new_user.name
+			request.session['alias'] = new_user.alias
 
-			return redirect('/exam/tasks/')
+			return redirect('/exam/home/')
 	else:
 		return redirect('/exam/')
 
@@ -75,13 +88,13 @@ def login(request):
 		else:
 			user = User.objects.filter(email=request.POST['email'])
 			request.session['id'] = user[0].id
-			request.session['name'] = user[0].name
-			return redirect('/exam/tasks/')
+			request.session['alias'] = user[0].alias
+			return redirect('/exam/home/')
 	else:
 		return redirect('/exam/')
 
 def logout(request):
 	request.session['id'] = None
-	request.session['name'] = None
+	request.session['alias'] = None
 
 	return redirect('/exam/')
